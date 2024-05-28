@@ -10,7 +10,7 @@ from notify.models.status import Status
 
 __description__ = "LINE Notify SDK for Pyrhon"
 __copyright__ = "Copyright 2021 nanato12"
-__version__ = "0.0.1-pre"
+__version__ = "0.0.2-pre"
 __license__ = "MIT License"
 __author__ = "nanato12"
 __author_email__ = "admin@nanato12.info"
