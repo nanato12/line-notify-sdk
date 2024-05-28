@@ -1,5 +1,5 @@
 from io import BufferedReader, BytesIO
-from typing import Any, Union
+from typing import Any, Dict, Union
 
 import requests
 from pydantic import BaseModel, StrictStr
@@ -20,7 +20,7 @@ class Notify(BaseModel):
             raise Exception("Invalid access token")
 
     @property
-    def headers(self) -> dict[str, str]:
+    def headers(self) -> Dict[str, str]:
         return {
             "Authorization": f"Bearer {self.token}",
         }
@@ -51,7 +51,7 @@ class Notify(BaseModel):
     def send_text(self, text: str) -> Response:
         return self.send({"message": (None, text)})
 
-    def send(self, files: dict[str, Any]) -> Response:
+    def send(self, files: Dict[str, Any]) -> Response:
         return requests.post(
             f"{self.host}/api/notify",
             headers=self.headers,
@@ -59,7 +59,7 @@ class Notify(BaseModel):
         )
 
     def get_status(self) -> Status:
-        j: dict[str, Any] = requests.get(
+        j: Dict[str, Any] = requests.get(
             f"{self.host}/api/status", headers=self.headers
         ).json()
         j["target_type"] = j.pop("targetType")
