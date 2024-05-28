@@ -1,5 +1,5 @@
 from io import BufferedReader, BytesIO
-from typing import Any
+from typing import Any, Union
 
 import requests
 from pydantic import BaseModel, StrictStr
@@ -39,7 +39,7 @@ class Notify(BaseModel):
         return self.send_image(text, open(path, "rb"))
 
     def send_image(
-        self, text: StrictStr, image: BufferedReader | BytesIO
+        self, text: StrictStr, image: Union[BufferedReader, BytesIO]
     ) -> Response:
         return self.send(
             {
