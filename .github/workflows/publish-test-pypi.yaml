@@ -30,6 +30,6 @@ jobs:
 
       - name: Publish TestPypi
         run: |
-          twine upload --repository pypitest dist/* -u __token__ -p $TOKEN --verbose
+          twine upload --repository-url https://test.pypi.org/legacy/ dist/* -u __token__ -p $TOKEN --verbose
         env:
           TOKEN: ${{ secrets.TEST_PYPI_TOKEN }}
