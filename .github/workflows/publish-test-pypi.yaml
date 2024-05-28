@@ -1,0 +1,46 @@
+name: Publish package
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Input test-pypi version'
+        required: true
+
+jobs:
+  test-pypi:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Set up Python 3.8
+        uses: actions/setup-python@v4
+        with:
+          python-version: 3.8
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements-dev.txt
+          pip install -r requirements.txt
+
+      - name: Update VERSION
+        run: |
+          echo '${{ inputs.version }}' > VERSION
+
+      - name: Build
+        run: |
+          make build
+
+      - name: Publish Test Pypi
+        run: |
+          twine upload --repository-url https://test.pypi.org/legacy/ dist/* -u __token__ -p ${{ secrets.TEST_PYPI_TOKEN }} --verbose
+
+      - uses: peter-evans/create-pull-request@v5
+        with:
+          commit-message: Update VERSION
+          delete-branch: true
+          title: Update VERSION (${{ inputs.version }})
+          body: link https://test.pypi.org/project/line-notify-sdk/${{ inputs.version }}/
+          reviewers: nanato12
+          labels: auto generate

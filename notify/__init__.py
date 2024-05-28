@@ -58,15 +58,15 @@ class Notify(BaseModel):
             files=files,
         )
 
+    def revoke(self) -> Response:
+        return requests.post(f"{self.host}/api/revoke", headers=self.headers)
+
     def get_status(self) -> Status:
         j: Dict[str, Any] = requests.get(
             f"{self.host}/api/status", headers=self.headers
         ).json()
         j["target_type"] = j.pop("targetType")
         return Status(**j)
-
-    def revoke(self) -> Response:
-        return requests.post(f"{self.host}/api/revoke", headers=self.headers)
 
     def get_rate_limit(self) -> RateLimit:
         headers = requests.head(
