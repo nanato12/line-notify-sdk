@@ -1,11 +1,11 @@
 name: Publish package
 
 on:
-  pull_request:
-    paths:
-      - .github/workflows/publish-test-pypi.yaml
-      - setup.cfg
-      - setup.py
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Input test-pypi version'
+        required: true
 
 jobs:
   test-pypi:
@@ -24,12 +24,23 @@ jobs:
           pip install -r requirements-dev.txt
           pip install -r requirements.txt
 
+      - name: Update VERSION
+        run: |
+          echo '${{ inputs.version }}' > VERSION
+
       - name: Build
         run: |
           make build
 
-      - name: Publish TestPypi
+      - name: Publish Test Pypi
         run: |
-          twine upload --repository-url https://test.pypi.org/legacy/ dist/* -u __token__ -p $TOKEN --verbose
-        env:
-          TOKEN: ${{ secrets.TEST_PYPI_TOKEN }}
+          twine upload --repository-url https://test.pypi.org/legacy/ dist/* -u __token__ -p ${{ secrets.TEST_PYPI_TOKEN }} --verbose
+
+      - uses: peter-evans/create-pull-request@v5
+        with:
+          commit-message: Update VERSION
+          delete-branch: true
+          title: Update VERSION (${{ inputs.version }})
+          body: link https://test.pypi.org/project/line-notify-sdk/${{ inputs.version }}/
+          reviewers: nanato12
+          labels: auto generate
