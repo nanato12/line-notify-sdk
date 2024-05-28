@@ -20,7 +20,7 @@ print(r.json())
 # {'status': 200, 'message': 'ok'}
 ```
 
-![notify](doc/image.png)
+![notify](https://github.com/nanato12/line-notify-sdk/assets/49806926/4987186e-8427-452e-95b2-397695523476)
 
 ## Methods
 
