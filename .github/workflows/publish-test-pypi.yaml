@@ -1,0 +1,39 @@
+name: Publish package
+
+on:
+  pull_request:
+    paths:
+      - .github/workflows/publish-test-pypi.yaml
+      - setup.cfg
+      - setup.py
+
+jobs:
+  python-lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Set up Python 3.8
+        uses: actions/setup-python@v4
+        with:
+          python-version: 3.8
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements-dev.txt
+          pip install -r requirements.txt
+
+      - name: Setup .pypirc
+        run: |
+          echo $PYPIRC > ~/.pypirc
+        env:
+          PYPIRC: ${{ secrets.PYPIRC }}
+
+      - name: Build
+        run: |
+          make build
+
+      - name: Publish TestPypi
+        run: |
+          make test-pypi
