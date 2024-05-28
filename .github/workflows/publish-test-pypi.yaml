@@ -8,7 +8,7 @@ on:
       - setup.py
 
 jobs:
-  python-lint:
+  test-pypi:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
