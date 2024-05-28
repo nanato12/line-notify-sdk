@@ -24,16 +24,12 @@ jobs:
           pip install -r requirements-dev.txt
           pip install -r requirements.txt
 
-      - name: Setup .pypirc
-        run: |
-          echo $PYPIRC > ~/.pypirc
-        env:
-          PYPIRC: ${{ secrets.PYPIRC }}
-
       - name: Build
         run: |
           make build
 
       - name: Publish TestPypi
         run: |
-          make test-pypi
+          twine upload --repository pypitest dist/* -u __token__ -p $TOKEN --verbose
+        env:
+          TOKEN: ${{ secrets.TEST_PYPI_TOKEN }}
